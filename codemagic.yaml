@@ -7,9 +7,18 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Get Flutter packages
-        script: flutter pub get
+      - name: Clean and get packages
+        script: |
+          flutter clean
+          flutter pub get
+      - name: Pod install
+        script: |
+          cd ios
+          pod deintegrate || true
+          pod cache clean --all
+          pod install --repo-update
       - name: Build iOS (unsigned)
-        script: flutter build ios --release --no-codesign
+        script: |
+          flutter build ios --release --no-codesign
     artifacts:
       - build/ios/iphoneos/Runner.app
